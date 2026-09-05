@@ -230,13 +230,13 @@
         ],
         "firstTableName": "User",
         "firstSchemaName": "public",
-        "firstRelation": "*",
+        "firstRelation": "1",
         "secondFieldNames": [
           "id_user"
         ],
         "secondTableName": "Laporan",
         "secondSchemaName": "public",
-        "secondRelation": "1",
+        "secondRelation": "*",
         "checkPoints": []
       },
       {
