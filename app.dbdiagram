@@ -1,0 +1,335 @@
+{
+  "version": "3.0.0",
+  "darkMode": true,
+  "gridEnabling": false,
+  "currentViewName": null,
+  "defaultView": {
+    "detailLevel": "All",
+    "relationshipMode": "All",
+    "tablePositions": [
+      {
+        "name": "User",
+        "schemaName": "public",
+        "x": -310.89398567445664,
+        "y": -180.86245819044277
+      },
+      {
+        "name": "Produk",
+        "schemaName": "public",
+        "x": -313.98972302389984,
+        "y": 90.12859912316947
+      },
+      {
+        "name": "Laporan",
+        "schemaName": "public",
+        "x": 759.8758607797454,
+        "y": 106.79220951253973
+      },
+      {
+        "name": "Transaksi",
+        "schemaName": "public",
+        "x": 397.3488601897699,
+        "y": -224.9314984761811
+      },
+      {
+        "name": "Kategori",
+        "schemaName": "public",
+        "x": -266.8056395321374,
+        "y": 431.38680061824857
+      },
+      {
+        "name": "detail_transaksi",
+        "schemaName": "public",
+        "x": 652.8593281253707,
+        "y": 623.8447323172982
+      },
+      {
+        "name": "barang_masuk",
+        "schemaName": "public",
+        "x": 56.24859674344799,
+        "y": 883.1332759027018
+      },
+      {
+        "name": "barang_keluar",
+        "schemaName": "public",
+        "x": -313.98972302389984,
+        "y": 930.9317220370168
+      }
+    ],
+    "tableGroupCollapseStates": [],
+    "stickyNoteLayouts": [],
+    "referencePaths": [
+      {
+        "firstFieldNames": [
+          "id"
+        ],
+        "firstTableName": "User",
+        "firstSchemaName": "public",
+        "firstRelation": "1",
+        "secondFieldNames": [
+          "id"
+        ],
+        "secondTableName": "Transaksi",
+        "secondSchemaName": "public",
+        "secondRelation": "*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "id"
+        ],
+        "firstTableName": "Transaksi",
+        "firstSchemaName": "public",
+        "firstRelation": "1",
+        "secondFieldNames": [
+          "id"
+        ],
+        "secondTableName": "Produk",
+        "secondSchemaName": "public",
+        "secondRelation": "*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "id_user"
+        ],
+        "firstTableName": "User",
+        "firstSchemaName": "public",
+        "firstRelation": "1",
+        "secondFieldNames": [
+          "id_transaksi"
+        ],
+        "secondTableName": "Transaksi",
+        "secondSchemaName": "public",
+        "secondRelation": "*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "id_transaksi"
+        ],
+        "firstTableName": "Transaksi",
+        "firstSchemaName": "public",
+        "firstRelation": "1",
+        "secondFieldNames": [
+          "id_produk"
+        ],
+        "secondTableName": "Produk",
+        "secondSchemaName": "public",
+        "secondRelation": "*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "id_kategori"
+        ],
+        "firstTableName": "Kategori",
+        "firstSchemaName": "public",
+        "firstRelation": "1",
+        "secondFieldNames": [
+          "id_produk"
+        ],
+        "secondTableName": "Produk",
+        "secondSchemaName": "public",
+        "secondRelation": "*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "id_produk"
+        ],
+        "firstTableName": "Produk",
+        "firstSchemaName": "public",
+        "firstRelation": "1",
+        "secondFieldNames": [
+          "id_detail_transaksi"
+        ],
+        "secondTableName": "detail_transaksi",
+        "secondSchemaName": "public",
+        "secondRelation": "*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "id_transaksi"
+        ],
+        "firstTableName": "Transaksi",
+        "firstSchemaName": "public",
+        "firstRelation": "1",
+        "secondFieldNames": [
+          "id_detail_transaksi"
+        ],
+        "secondTableName": "detail_transaksi",
+        "secondSchemaName": "public",
+        "secondRelation": "*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "id_kategori"
+        ],
+        "firstTableName": "Kategori",
+        "firstSchemaName": "public",
+        "firstRelation": "1",
+        "secondFieldNames": [
+          "id_kategori"
+        ],
+        "secondTableName": "Produk",
+        "secondSchemaName": "public",
+        "secondRelation": "*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "id_user"
+        ],
+        "firstTableName": "User",
+        "firstSchemaName": "public",
+        "firstRelation": "1",
+        "secondFieldNames": [
+          "id_user"
+        ],
+        "secondTableName": "Transaksi",
+        "secondSchemaName": "public",
+        "secondRelation": "*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "id_transaksi"
+        ],
+        "firstTableName": "Transaksi",
+        "firstSchemaName": "public",
+        "firstRelation": "1",
+        "secondFieldNames": [
+          "id_transaksi"
+        ],
+        "secondTableName": "detail_transaksi",
+        "secondSchemaName": "public",
+        "secondRelation": "*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "id_produk"
+        ],
+        "firstTableName": "Produk",
+        "firstSchemaName": "public",
+        "firstRelation": "1",
+        "secondFieldNames": [
+          "id_produk"
+        ],
+        "secondTableName": "detail_transaksi",
+        "secondSchemaName": "public",
+        "secondRelation": "*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "id_user"
+        ],
+        "firstTableName": "User",
+        "firstSchemaName": "public",
+        "firstRelation": "*",
+        "secondFieldNames": [
+          "id_user"
+        ],
+        "secondTableName": "Laporan",
+        "secondSchemaName": "public",
+        "secondRelation": "1",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "id_transaksi"
+        ],
+        "firstTableName": "Transaksi",
+        "firstSchemaName": "public",
+        "firstRelation": "*",
+        "secondFieldNames": [
+          "id_transaksi"
+        ],
+        "secondTableName": "Laporan",
+        "secondSchemaName": "public",
+        "secondRelation": "1",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "id_produk"
+        ],
+        "firstTableName": "Produk",
+        "firstSchemaName": "public",
+        "firstRelation": "*",
+        "secondFieldNames": [
+          "id_produk"
+        ],
+        "secondTableName": "Laporan",
+        "secondSchemaName": "public",
+        "secondRelation": "1",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "id_produk"
+        ],
+        "firstTableName": "Produk",
+        "firstSchemaName": "public",
+        "firstRelation": "1",
+        "secondFieldNames": [
+          "id_produk"
+        ],
+        "secondTableName": "barang_masuk",
+        "secondSchemaName": "public",
+        "secondRelation": "*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "id_laporan"
+        ],
+        "firstTableName": "Laporan",
+        "firstSchemaName": "public",
+        "firstRelation": "1",
+        "secondFieldNames": [
+          "id_laporan"
+        ],
+        "secondTableName": "barang_masuk",
+        "secondSchemaName": "public",
+        "secondRelation": "*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "id_produk"
+        ],
+        "firstTableName": "Produk",
+        "firstSchemaName": "public",
+        "firstRelation": "1",
+        "secondFieldNames": [
+          "id_produk"
+        ],
+        "secondTableName": "barang_keluar",
+        "secondSchemaName": "public",
+        "secondRelation": "*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "id_laporan"
+        ],
+        "firstTableName": "Laporan",
+        "firstSchemaName": "public",
+        "firstRelation": "1",
+        "secondFieldNames": [
+          "id_laporan"
+        ],
+        "secondTableName": "barang_keluar",
+        "secondSchemaName": "public",
+        "secondRelation": "*",
+        "checkPoints": []
+      }
+    ]
+  },
+  "views": {}
+}

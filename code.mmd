@@ -1,0 +1,18 @@
+graph LR
+    subgraph Frontend
+        FE[React / Vue UI]
+    end
+    subgraph Backend
+        API[REST API (Node/Express)]
+        DB[(MySQL / MariaDB)]
+    end
+    subgraph DevOps
+        CI[CI/CD Pipeline]
+        Docker[Docker Container]
+    end
+
+    FE -->|HTTP| API
+    API -->|SQL| DB
+    CI --> Docker
+    Docker --> API
+    Docker --> DB

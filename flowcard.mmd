@@ -1,0 +1,14 @@
+flowchart TD
+    A[Login Kasir] --> B{Pilih Produk}
+    B --> C[Tambah ke Keranjang]
+    C --> B
+    B --> D[Klik “Checkout”]
+    D --> E[Hitung Total & Tampilkan]
+    E --> F{Konfirmasi?}
+    F -->|Ya| G[Simpan Transaksi Header]
+    G --> H[Simpan semua TransaksiItem]
+    H --> I[Update Stok Produk]
+    I --> J[Buat Laporan]
+    J --> K[Print / Export]
+    F -->|Tidak| B
+    K --> L[Selesai, kembali ke Home]

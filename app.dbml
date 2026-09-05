@@ -1,0 +1,92 @@
+Project sample_project {
+  database_type: 'mysql'
+  Note: 'Sample e-commerce database schema'
+}
+
+Table User {
+  id_user integer [increment, primary key]
+  username varchar(255)
+  email varchar(255) [unique]
+  role varchar(30) //admin || kasir
+  password char(8) 
+  refresh_token text
+}
+
+Table Kategori {
+  id_kategori int [primary key, increment]
+  nama_kategori varchar(40)
+}
+
+Table Produk {
+    id_produk integer [increment, primary key]
+    nama_produk varchar(255)
+    harga integer
+    gambar text
+    stok int
+    status boolean
+    id_kategori int //[ref: > Kategori.id_kategori]
+}
+
+
+
+Table Transaksi {
+    id_transaksi integer [increment, primary key]
+    id_user integer //[ref : > User.id_user]
+    tanggal_transaksi timestamp
+    total_bayar decimal(12,2)
+    status varchar(20) //misal : selesai / batal
+}
+
+Table detail_transaksi {
+  id_detail_transaksi integer [increment, primary key]
+  id_transaksi integer //[ref: > Transaksi.id_transaksi]
+  id_produk integer //[ref: > Produk.id_produk]
+  qty integer [not null] //jumlah beli
+  harga_satuan decimal(10,2) [not null] //harga pada saat transaksi
+  subtotal decimal(12,2) // qty * harga_satuan
+
+}
+
+
+Table barang_masuk {
+  id_masuk integer [increment, primary key]
+  id_produk integer [ref: >Produk.id_produk]
+  qty integer
+  tanggal timestamp
+  id_laporan integer [ref: > Laporan.id_laporan]
+}
+
+Table barang_keluar {
+  id_keluar integer [increment, primary key]
+  id_produk integer [ref: >Produk.id_produk]
+  qty integer
+  tanggal timestamp
+  id_laporan integer [ref: > Laporan.id_laporan]
+
+}
+
+Table Laporan {
+    id_laporan  integer [increment, primary key]
+    status      varchar(20) // 'login', 'logout',     'transaksi', 'masuk', 'keluar', 'hasil'
+    tanggal     timestamp // waktu realtime aksi
+    keterangan  text // optional,  ex: 'login sukses', 'stok masuk', dsb..
+
+    // fk optional, tergatung type
+    id_user     integer 
+    id_transaksi integer 
+    id_produk integer 
+    }
+
+
+
+// relasi (foreign key)
+Ref:  User.id_user <  Transaksi.id_transaksi
+Ref:  Transaksi.id_transaksi < Produk.id_produk
+Ref : Kategori.id_kategori < Produk.id_produk
+Ref: Produk.id_produk < detail_transaksi.id_detail_transaksi
+Ref : Transaksi.id_transaksi < detail_transaksi.id_detail_transaksi
+
+Ref : User.id_user < Laporan.id_user
+Ref : Transaksi.id_transaksi > Laporan.id_transaksi
+Ref: Produk.id_produk > Laporan.id_produk
+
