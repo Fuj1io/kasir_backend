@@ -1,5 +1,6 @@
 import express from "express";
 import dotenv from 'dotenv';
+import cookiesParser from "cookie-parser";
 
 import db from "./src/configs/connectDB.js";
 import userRouter from "./src/routes/userRouter.js";
@@ -22,11 +23,9 @@ const app = express();
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookiesParser());
 
 //route
-app.get("/", (req, res) => {
-  res.send("ok jalan");
-})
 app.use("/user", userRouter);
 
 // Port configuration

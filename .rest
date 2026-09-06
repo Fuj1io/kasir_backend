@@ -1,4 +1,6 @@
-GET http://localhost:3000
+### get-user
+GET http://localhost:3000/user/profile/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjUsInVzZXJuYW1lIjoiamFtYWwiLCJlbWFpbCI6ImphbWFsQGV4YW1wbGUuY29tIiwiaWF0IjoxNzg4NzA4OTI2LCJleHAiOjE3ODg3MDg5NDF9.7LtYb7ccqRpmMlZxMuPblNRJToNMUl6idNcGqfJ87Lo
 
 ### register_user
 POST http://localhost:3000/user/register
@@ -11,3 +13,18 @@ Content-Type: application/json
     "password" : "123",
     "confPassword" : "123"
 }
+
+### LOGIN USER
+POST http://localhost:3000/user/login
+Content-Type: application/json
+
+{
+    "email" : "jamal@example.com",
+    "password" : "123"
+}
+
+### REFRESH_TOKEN
+GET http://localhost:3000/user/refresh
+
+### logout_user
+DELETE http://localhost:3000/user/logout
