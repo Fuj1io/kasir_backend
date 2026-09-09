@@ -4,7 +4,9 @@ import cookiesParser from "cookie-parser";
 import cors from "cors";
 
 import db from "./src/configs/connectDB.js";
-import userRouter from "./src/routes/userRouter.js";
+import userRoute from "./src/routes/userRoute.js";
+import produkRoute from "./src/routes/produkRoute.js";
+import "./src/models/Index.js";
 
 
 dotenv.config();
@@ -13,8 +15,9 @@ const app = express();
 // connectDB
 (async () => {
   try {
-    await db.authenticate({ alter: true });
-    console.log("DB connected !")
+    await db.authenticate();
+    await db.sync({ alter: true });
+    console.log("DB connected & models synced!");
   } catch (error) {
     console.log(error)
   }
@@ -26,11 +29,12 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookiesParser());
 app.use(cors({
   credentials: true,
-  origin: 'http://localhost:5173'
+  origin: 'http://localhost:5173' //ganti sesuai url frontend
 }))
 
 //route
-app.use("/user", userRouter);
+app.use("/user", userRoute);
+app.use("/produk", produkRoute);
 
 // Port configuration
 const PORT = process.env.PORT || 3000;

@@ -28,3 +28,19 @@ GET http://localhost:3000/user/refresh
 
 ### logout_user
 DELETE http://localhost:3000/user/logout
+
+=============== produk=======
+### GET PRODUK
+GET  http://localhost:3000/produk?page=4
+#### GET_PRODUK by_id
+GET  http://localhost:3000/produk/1
+####
+POST  http://localhost:3000/produk
+Content-Type: application/json
+
+{
+    "nama_produk": "Masako ayam",
+    "harga": 500,
+    "stok": 30,
+    "kategori" :1
+}

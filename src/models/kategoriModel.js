@@ -1,5 +1,5 @@
 import { DataTypes } from "sequelize";
-import db from "../configs/connectDB";
+import db from "../configs/connectDB.js";
 
 export const Kategori = db.define("Kategori", {
     id_kategori: {
@@ -12,5 +12,8 @@ export const Kategori = db.define("Kategori", {
         type: DataTypes.STRING(255),
         allowNull: false
     },
+}, {
+    timestamps: false,
+    freezeTableName: true
 });
 

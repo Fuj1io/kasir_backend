@@ -24,4 +24,7 @@ export const barangMasukModel = db.define("barang_masuk", {
         type: DataTypes.INTEGER,
         allowNull: false
     }
+}, {
+    freezeTableName: true,
+    table_name: 'barang_masuk'
 });

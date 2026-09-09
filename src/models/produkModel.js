@@ -1,13 +1,12 @@
 
 import { DataTypes } from "sequelize";
-import db from "../configs/connectDB";
+import db from "../configs/connectDB.js";
 
-export const Produk = db.define("Products", {
+export const Produk = db.define("Produk", {
     id_produk: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true,
-        allowNull: false
     },
     nama_produk: {
         type: DataTypes.STRING(255),
@@ -19,18 +18,23 @@ export const Produk = db.define("Products", {
     },
     gambar: {
         type: DataTypes.TEXT,
-        allowNull: false
+        allowNull: true
     },
     stok: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
+        defaultValue: 0
     },
     status: {
-        type: DataTypes.BOOLEAN,
-        allowNull: false
+        type: DataTypes.ENUM("aman", "menipis", "habis"),
+        allowNull: false,
+        defaultValue: "aman"
     },
     id_kategori: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: true
     }
+}, {
+    freezeTableName: true,
+    table_name: 'produk'
 });

@@ -28,4 +28,6 @@ export const detailTransaksiModel = db.define("detail_transaksi", {
         type: DataTypes.DECIMAL(12, 2),
         allowNull: false
     }
+}, {
+    freezeTableName: true
 });

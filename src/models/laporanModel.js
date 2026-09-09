@@ -31,4 +31,6 @@ export const Laporan = db.define("laporan", {
         type: DataTypes.INTEGER,
         allowNull: true
     }
+}, {
+    freezeTableName: true
 });

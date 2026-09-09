@@ -24,4 +24,6 @@ export const Transaksi = db.define("Transaksi", {
         type: DataTypes.STRING(20),
         allowNull: false
     }
+}, {
+    freezeTableName: true
 });
