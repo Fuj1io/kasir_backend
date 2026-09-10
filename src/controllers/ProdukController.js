@@ -1,4 +1,5 @@
 import { Produk } from "../models/produkModel.js";
+import { Kategori } from "../models/kategoriModel.js";
 import { Op } from "sequelize";
 
 export const getAllProduk = async (req, res) => {
@@ -6,6 +7,7 @@ export const getAllProduk = async (req, res) => {
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 20;
         const s     = req.query.s || "";
+        const kategori = req.query.kategori || "";
         const offset = (page - 1) * limit;
 
         // kondisi pencarian data dari query ketika malakukan pencarian
@@ -13,13 +15,42 @@ export const getAllProduk = async (req, res) => {
 
         if(s) {
             whereClouse[Op.or] = [
-                {nama_produk : {[Op.like]: `${s}%`}}
+                {nama_produk : {[Op.like]: `%${s}%`}}
             ]
+        }
+
+        const includeOption = [
+            {
+                model: Kategori,
+                attributes: ['id_kategori', 'nama_kategori'],
+                required: false
+            }
+        ];
+
+        if (kategori && kategori !== "Semua") {
+            if (!isNaN(kategori)) {
+                whereClouse.id_kategori = parseInt(kategori);
+            } else {
+                let targetCategories = [kategori];
+                if (kategori === "Bahan Makanan") {
+                    targetCategories = ["Bahan Makanan", "bahan_makanan", "bahan makanan"];
+                } else if (kategori === "Kebutuhan Harian" || kategori === "Kebutuhan Rumah") {
+                    targetCategories = ["Kebutuhan Harian", "kebutuhan_harian", "kebutuhan_rumah", "Kebutuhan Rumah", "kebutuhan harian"];
+                }
+
+                includeOption[0].where = {
+                    nama_kategori: {
+                        [Op.in]: targetCategories
+                    }
+                };
+                includeOption[0].required = true;
+            }
         }
 
         // ambil data dan total baris secara bersamaan untuk pagination
         const {count, rows: produk} = await Produk.findAndCountAll({
             where: whereClouse,
+            include: includeOption,
             limit : limit,
             offset : offset
         });
