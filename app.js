@@ -6,6 +6,7 @@ import cors from "cors";
 import db from "./src/configs/connectDB.js";
 import userRoute from "./src/routes/userRoute.js";
 import produkRoute from "./src/routes/produkRoute.js";
+import transaksiRoute from "./src/routes/transaksiRoute.js";
 import "./src/models/Index.js";
 
 
@@ -35,6 +36,7 @@ app.use(cors({
 //route
 app.use("/user", userRoute);
 app.use("/produk", produkRoute);
+app.use("/transaksi", transaksiRoute);
 
 // Port configuration
 const PORT = process.env.PORT || 3000;

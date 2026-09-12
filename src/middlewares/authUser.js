@@ -8,7 +8,7 @@ export const authUser = (req, res, next) => {
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (error, decoded) => {
         if(error) return res.status(403).json({ message: "Invalid Token" });
 
-        req.userId = decoded.userID;
+        req.userId = decoded.userId;
         req.email = decoded.email;
         next();
 
