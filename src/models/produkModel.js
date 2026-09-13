@@ -2,6 +2,14 @@
 import { DataTypes } from "sequelize";
 import db from "../configs/connectDB.js";
 
+export const getStatusStok = (stok) => {
+    const jumlahStok = Number(stok);
+
+    if (jumlahStok === 0) return "habis";
+    if (jumlahStok <= 5) return "menipis";
+    return "aman";
+};
+
 export const Produk = db.define("Produk", {
     id_produk: {
         type: DataTypes.INTEGER,
@@ -36,5 +44,10 @@ export const Produk = db.define("Produk", {
     }
 }, {
     freezeTableName: true,
-    table_name: 'produk'
+    table_name: 'produk',
+    hooks: {
+        beforeValidate: (produk) => {
+            produk.status = getStatusStok(produk.stok);
+        }
+    }
 });

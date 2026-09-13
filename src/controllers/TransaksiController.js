@@ -1,5 +1,6 @@
 import db from "../configs/connectDB.js";
 import { Produk, Transaksi, detailTransaksiModel } from "../models/Index.js";
+import { getStatusStok } from "../models/produkModel.js";
 
 export const createTransaksi = async (req, res) => {
     const { items } = req.body;
@@ -56,7 +57,7 @@ export const createTransaksi = async (req, res) => {
             const stokBaru = detail.produk.stok - detail.qty;
             await detail.produk.update({
                 stok: stokBaru,
-                status: stokBaru === 0 ? "habis" : stokBaru <= 5 ? "menipis" : "aman"
+                status: getStatusStok(stokBaru)
             }, { transaction });
         }
 
