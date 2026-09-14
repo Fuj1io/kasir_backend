@@ -94,7 +94,7 @@ export const addProduk = async (req, res) => {
 
         return res.status(201).json({
             data: produk,
-            message: "Berhasil Tambah data "
+            message: `Berhasil Tambah ${produk.nama_produk}`
         });
     } catch (error) {
         res.status(400).json({ msg: error.message });
@@ -103,32 +103,35 @@ export const addProduk = async (req, res) => {
 
 export const editProduk = async (req, res) => {
     try {
-        const produk = await Produk.findOne({
-            where: { id: req.params.id }
-        });
+        const { id_produk } = req.params;
+        const produk = await Produk.findOne({ where: { id_produk } });
         if (!produk) return res.status(404).json({ msg: "Produk tidak ditemukan" });
 
-        await Produk.update(req.body, {
-            where: { id: produk.id }
+        const { nama_produk, harga, stok, kategori, id_kategori } = req.body;
+        const kategoriId = kategori ?? id_kategori;
+
+        await produk.update({
+            nama_produk: nama_produk ?? produk.nama_produk,
+            harga: harga !== undefined ? harga : produk.harga,
+            stok: stok !== undefined ? stok : produk.stok,
+            id_kategori: kategoriId ?? produk.id_kategori,
         });
-        res.status(200).json({ msg: "Produk berhasil diupdate" });
+
+        return res.status(200).json({ data: produk, message: `Produk ${produk.nama_produk} berhasil diupdate` });
     } catch (error) {
-        res.status(400).json({ msg: error.message });
+        return res.status(400).json({ msg: error.message });
     }
 };
 
 export const deleteProduk = async (req, res) => {
     try {
-        const produk = await Produk.findOne({
-            where: { id: req.params.id }
-        });
+        const { id_produk } = req.params;
+        const produk = await Produk.findOne({ where: { id_produk } });
         if (!produk) return res.status(404).json({ msg: "Produk tidak ditemukan" });
 
-        await Produk.destroy({
-            where: { id: produk.id }
-        });
-        res.status(200).json({ msg: "Produk berhasil dihapus" });
+        await produk.destroy();
+        return res.status(200).json({ message: `Produk ${produk.nama_produk} berhasil dihapus` });
     } catch (error) {
-        res.status(400).json({ msg: error.message });
+        return res.status(400).json({ msg: error.message });
     }
 };

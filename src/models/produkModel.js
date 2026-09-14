@@ -6,7 +6,7 @@ export const getStatusStok = (stok) => {
     const jumlahStok = Number(stok);
 
     if (jumlahStok === 0) return "habis";
-    if (jumlahStok <= 5) return "menipis";
+    if (jumlahStok <= 10) return "menipis";
     return "aman";
 };
 
