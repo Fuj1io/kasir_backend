@@ -26,6 +26,14 @@ export const Users = db.define('Users', {
     },
     refresh_token: {
         type: DataTypes.TEXT,
+    },
+    last_login: {
+        type: DataTypes.DATE,
+        allowNull: true
+    },
+    last_logout: {
+        type: DataTypes.DATE,
+        allowNull: true
     }
 }, {
     freezeTableName: true

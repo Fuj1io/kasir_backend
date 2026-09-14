@@ -71,11 +71,11 @@ export const loginUser = async (req, res) => {
         const email = user.email;
 
         // generate-token             payload, secret, options
-        const accessToken = jwt.sign({userId, username, email}, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '15s'});
+        const accessToken = jwt.sign({userId, username, email}, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '6d'});
         const refreshToken = jwt.sign({ userId, username, email}, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '7d'});
 
-        // update refresh_token in database
-        await Users.update({  refresh_token : refreshToken}, { where: {id_user: userId} });
+        // update refresh_token + last_login in database
+        await Users.update({  refresh_token : refreshToken, last_login: new Date() }, { where: {id_user: userId} });
 
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true,
@@ -99,8 +99,10 @@ export const logOutUser = async(req, res) => {
     if(!user) return res.status(204).json({ message: "Cannot Logout or Something Went Wrong!" });
 
     const userId = user.id_user;
-    await Users.update({ refresh_token: null }, { where: { id_user: userId } });
+    await Users.update({ refresh_token: null, last_logout: new Date() }, { where: { id_user: userId } });
 
     res.clearCookie('refreshToken');
     return res.status(200).json({ message: "Logout Successfully !" });
 }
+
+// access_token : belum selesai

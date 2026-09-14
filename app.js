@@ -7,6 +7,7 @@ import db from "./src/configs/connectDB.js";
 import userRoute from "./src/routes/userRoute.js";
 import produkRoute from "./src/routes/produkRoute.js";
 import transaksiRoute from "./src/routes/transaksiRoute.js";
+import laporanRoute from "./src/routes/laporanRoute.js";
 import "./src/models/Index.js";
 
 
@@ -37,6 +38,7 @@ app.use(cors({
 app.use("/user", userRoute);
 app.use("/produk", produkRoute);
 app.use("/transaksi", transaksiRoute);
+app.use("/laporan", laporanRoute);
 
 // Port configuration
 const PORT = process.env.PORT || 3000;
