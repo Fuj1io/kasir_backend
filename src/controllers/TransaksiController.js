@@ -1,5 +1,5 @@
 import db from "../configs/connectDB.js";
-import { Produk, Transaksi, detailTransaksiModel } from "../models/Index.js";
+import { Produk, Transaksi, detailTransaksiModel, BarangKeluar, Laporan } from "../models/Index.js";
 import { getStatusStok } from "../models/produkModel.js";
 
 export const createTransaksi = async (req, res) => {
@@ -45,6 +45,14 @@ export const createTransaksi = async (req, res) => {
             status: "selesai"
         }, { transaction });
 
+        const laporan = await Laporan.create({
+            status: "keluar",
+            tanggal: new Date(),
+            keterangan: `Transaksi #${transaksi.id_transaksi}`,
+            id_transaksi: transaksi.id_transaksi,
+            id_user: req.userId || null,
+        }, { transaction });
+
         for (const detail of details) {
             await detailTransaksiModel.create({
                 id_transaksi: transaksi.id_transaksi,
@@ -58,6 +66,13 @@ export const createTransaksi = async (req, res) => {
             await detail.produk.update({
                 stok: stokBaru,
                 status: getStatusStok(stokBaru)
+            }, { transaction });
+
+            await BarangKeluar.create({
+                id_produk: detail.produk.id_produk,
+                qty: detail.qty,
+                tanggal: new Date(),
+                id_laporan: laporan.id_laporan,
             }, { transaction });
         }
 

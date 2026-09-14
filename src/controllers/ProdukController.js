@@ -1,5 +1,8 @@
+import db from "../configs/connectDB.js";
 import { Produk } from "../models/produkModel.js";
 import { Kategori } from "../models/kategoriModel.js";
+import { barangMasukModel } from "../models/barangMasukModel.js";
+import { Laporan } from "../models/laporanModel.js";
 import { Op } from "sequelize";
 
 export const getAllProduk = async (req, res) => {
@@ -82,22 +85,41 @@ export const getProdukBy = async (req, res) => {
 };
 
 export const addProduk = async (req, res) => {
+    const t = await db.transaction();
     try {
-        const {nama_produk, harga, stok, kategori} = req.body;
-       
-        const produk = await Produk.create({
-            nama_produk: nama_produk,
-            harga: harga,
-            stok: stok,
-            id_kategori : kategori
-        });
+        const { nama_produk, harga, stok, kategori } = req.body;
+        const qty = Number(stok) || 0;
 
+        const produk = await Produk.create({
+            nama_produk,
+            harga,
+            stok,
+            id_kategori: kategori
+        }, { transaction: t });
+
+        const laporan = await Laporan.create({
+            status: "masuk",
+            tanggal: new Date(),
+            keterangan: `Barang masuk: ${produk.nama_produk} x${qty}`,
+            id_produk: produk.id_produk,
+            id_user: req.userId || null,
+        }, { transaction: t });
+
+        await barangMasukModel.create({
+            id_produk: produk.id_produk,
+            qty,
+            tanggal: new Date(),
+            id_laporan: laporan.id_laporan,
+        }, { transaction: t });
+
+        await t.commit();
         return res.status(201).json({
             data: produk,
             message: `Berhasil Tambah ${produk.nama_produk}`
         });
     } catch (error) {
-        res.status(400).json({ msg: error.message });
+        await t.rollback();
+        return res.status(400).json({ msg: error.message });
     }
 };
 
