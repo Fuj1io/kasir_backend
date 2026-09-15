@@ -83,7 +83,7 @@ export const getLaporan = async (req, res) => {
     const totalTransaksi = await Transaksi.count({ where: tWhere });
     const totalBarangTerjual = (await BarangKeluar.sum("qty", { where: bKeluarWhere })) || 0;
     const totalBarangMasuk = (await barangMasukModel.sum("qty", { where: bMasukWhere })) || 0;
-    const barangMenipis = await Produk.count({ where: { status: { [Op.in]: ["menipis", "habis"] } } });
+    const barangMenipis = await Produk.count({ where: { status: "menipis" } });
     const totalProduk = await Produk.count();
 
     // detail per transaksi for table if needed
