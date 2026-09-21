@@ -1,15 +1,14 @@
 ### get-user
 GET http://localhost:3000/user/profile/1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjUsInVzZXJuYW1lIjoiamFtYWwiLCJlbWFpbCI6ImphbWFsQGV4YW1wbGUuY29tIiwiaWF0IjoxNzg4NzEwNzQ2LCJleHAiOjE3ODg3MTA3NzZ9.cVC5Ax23tuBBVUd4zIsjdvc4Y7GGf6SPO9-QO8rMpC4
-
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInVzZXJuYW1lIjoiamFtYWwiLCJlbWFpbCI6ImphbWFsQGV4YW1wbGUuY29tIiwiaWF0IjoxNzg5ODcxMjg2LCJleHAiOjE3ODk5NTc2ODZ9.-DecwIxLW05BmT26Khn5vx-F-1p6aq0y4NFPZNkAbek
 ### register_user
 POST http://localhost:3000/user/register
 Content-Type: application/json
 
 {
-    "username" : "jamal",
-    "email" : "jamal@example.com",
-    "role" : "admin",
+    "username" : "Fuji",
+    "email" : "fuji@example.com",
+    "role" : "kasir",
     "password" : "123",
     "confPassword" : "123"
 }

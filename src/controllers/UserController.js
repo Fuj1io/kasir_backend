@@ -58,7 +58,7 @@ export const registerUser = async (req, res) => {
 };
 
 export const loginUser = async (req, res) => {
-    try {
+    try { 
         const user = await Users.findOne({ where: {email :  req.body.email } });
         if(!user) return res.status(404).json({ message: "User Not Found !" });
 
@@ -69,10 +69,11 @@ export const loginUser = async (req, res) => {
         const userId = user.id_user;
         const username = user.username;
         const email = user.email;
+        const role = user.role;
 
         // generate-token             payload, secret, options
-        const accessToken = jwt.sign({userId, username, email}, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '6d'});
-        const refreshToken = jwt.sign({ userId, username, email}, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '7d'});
+        const accessToken = jwt.sign({userId, username, email, role}, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '1d'});
+        const refreshToken = jwt.sign({ userId, username, email, role}, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '7d'});
 
         // update refresh_token + last_login in database
         await Users.update({  refresh_token : refreshToken, last_login: new Date() }, { where: {id_user: userId} });

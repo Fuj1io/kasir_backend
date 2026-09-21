@@ -14,7 +14,7 @@ const parseDate = (str) => {
 const buildDateWhere = (dari, sampai, field = "tanggal") => {
   const where = {};
   const d1 = parseDate(dari);
-  const d2 = parseDate(sampai);
+  const d2 = parseDate(sampai); 
   if (d1 && d2) {
     const end = new Date(d2);
     end.setHours(23, 59, 59, 999);
