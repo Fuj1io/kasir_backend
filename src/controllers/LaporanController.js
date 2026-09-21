@@ -3,12 +3,23 @@ import { Users, Produk, Transaksi, detailTransaksiModel, barangMasukModel, Baran
 
 const parseDate = (str) => {
   if (!str) return null;
+  if (str instanceof Date) return str;
   // support YYYY-MM-DD and DD/MM/YYYY
-  if (str.includes("/")) {
+  if (typeof str === "string" && str.includes("/")) {
     const [d, m, y] = str.split("/");
     return new Date(`${y}-${m}-${d}T00:00:00`);
   }
   return new Date(`${str}T00:00:00`);
+};
+
+const formatDateOnly = (d) => {
+  if (!d) return null;
+  const date = new Date(d);
+  if (isNaN(date.getTime())) return null;
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
 };
 
 const buildDateWhere = (dari, sampai, field = "tanggal") => {
@@ -20,7 +31,9 @@ const buildDateWhere = (dari, sampai, field = "tanggal") => {
     end.setHours(23, 59, 59, 999);
     where[field] = { [Op.between]: [d1, end] };
   } else if (d1) {
-    where[field] = { [Op.gte]: d1 };
+    const end = new Date(d1);
+    end.setHours(23, 59, 59, 999);
+    where[field] = { [Op.between]: [d1, end] };
   } else if (d2) {
     const end = new Date(d2);
     end.setHours(23, 59, 59, 999);
@@ -29,25 +42,61 @@ const buildDateWhere = (dari, sampai, field = "tanggal") => {
   return where;
 };
 
+const getLatestDateForJenis = async (jenis) => {
+  let latest = null;
+  if (jenis === "masuk") {
+    latest = await barangMasukModel.max("tanggal");
+  } else if (jenis === "keluar") {
+    latest = await BarangKeluar.max("tanggal");
+  } else if (jenis === "user") {
+    latest = await Users.max("last_login");
+  } else {
+    latest = await Transaksi.max("tanggal_transaksi");
+    if (!latest) latest = await BarangKeluar.max("tanggal");
+    if (!latest) latest = await barangMasukModel.max("tanggal");
+  }
+  if (!latest) {
+    const lapMax = await Laporan.max("tanggal");
+    if (lapMax) latest = lapMax;
+  }
+  return latest ? formatDateOnly(latest) : formatDateOnly(new Date());
+};
+
 export const getLaporan = async (req, res) => {
   try {
     const jenis = (req.query.jenis || "akhir").toLowerCase();
-    const { dari, sampai } = req.query;
+    const isCustomFilter = Boolean(req.query.dari || req.query.sampai);
 
-    // 1. Laporan User - filter by last_login range, return login/logout timestamps
+    let effectiveDari = req.query.dari;
+    let effectiveSampai = req.query.sampai;
+
+    if (!isCustomFilter) {
+      const latestDate = await getLatestDateForJenis(jenis);
+      effectiveDari = latestDate;
+      effectiveSampai = latestDate;
+    }
+
+    // 1. Laporan User
     if (jenis === "user") {
-      const where = buildDateWhere(dari, sampai, "last_login");
+      const where = buildDateWhere(effectiveDari, effectiveSampai, "last_login");
       const users = await Users.findAll({
-        where,
+        where: isCustomFilter ? where : {},
         attributes: ["id_user", "username", "email", "role", "last_login", "last_logout", "createdAt"],
         order: [["last_login", "DESC"]],
       });
-      return res.status(200).json({ jenis: "user", data: users });
+      return res.status(200).json({
+        jenis: "user",
+        tanggal: effectiveDari,
+        dari: effectiveDari,
+        sampai: effectiveSampai,
+        isLatest: !isCustomFilter,
+        data: users
+      });
     }
 
     // 2. Laporan Barang Masuk
     if (jenis === "masuk") {
-      const where = buildDateWhere(dari, sampai, "tanggal");
+      const where = buildDateWhere(effectiveDari, effectiveSampai, "tanggal");
       const data = await barangMasukModel.findAll({
         where,
         include: [
@@ -56,12 +105,19 @@ export const getLaporan = async (req, res) => {
         ],
         order: [["tanggal", "DESC"]],
       });
-      return res.status(200).json({ jenis: "masuk", data });
+      return res.status(200).json({
+        jenis: "masuk",
+        tanggal: effectiveDari,
+        dari: effectiveDari,
+        sampai: effectiveSampai,
+        isLatest: !isCustomFilter,
+        data
+      });
     }
 
     // 3. Laporan Barang Keluar
     if (jenis === "keluar") {
-      const where = buildDateWhere(dari, sampai, "tanggal");
+      const where = buildDateWhere(effectiveDari, effectiveSampai, "tanggal");
       const data = await BarangKeluar.findAll({
         where,
         include: [
@@ -70,14 +126,20 @@ export const getLaporan = async (req, res) => {
         ],
         order: [["tanggal", "DESC"]],
       });
-      // enrich with user/transaksi if needed
-      return res.status(200).json({ jenis: "keluar", data });
+      return res.status(200).json({
+        jenis: "keluar",
+        tanggal: effectiveDari,
+        dari: effectiveDari,
+        sampai: effectiveSampai,
+        isLatest: !isCustomFilter,
+        data
+      });
     }
 
     // 4. Laporan Hasil Akhir (default)
-    const tWhere = buildDateWhere(dari, sampai, "tanggal_transaksi");
-    const bKeluarWhere = buildDateWhere(dari, sampai, "tanggal");
-    const bMasukWhere = buildDateWhere(dari, sampai, "tanggal");
+    const tWhere = buildDateWhere(effectiveDari, effectiveSampai, "tanggal_transaksi");
+    const bKeluarWhere = buildDateWhere(effectiveDari, effectiveSampai, "tanggal");
+    const bMasukWhere = buildDateWhere(effectiveDari, effectiveSampai, "tanggal");
 
     const totalPenjualan = (await Transaksi.sum("total_bayar", { where: tWhere })) || 0;
     const totalTransaksi = await Transaksi.count({ where: tWhere });
@@ -86,7 +148,6 @@ export const getLaporan = async (req, res) => {
     const barangMenipis = await Produk.count({ where: { status: "menipis" } });
     const totalProduk = await Produk.count();
 
-    // detail per transaksi for table if needed
     const transaksiList = await Transaksi.findAll({
       where: tWhere,
       include: [
@@ -94,11 +155,15 @@ export const getLaporan = async (req, res) => {
         { model: detailTransaksiModel, include: [{ model: Produk, attributes: ["nama_produk"] }] },
       ],
       order: [["tanggal_transaksi", "DESC"]],
-      limit: 50,
+      limit: 100,
     });
 
     return res.status(200).json({
       jenis: "akhir",
+      tanggal: effectiveDari,
+      dari: effectiveDari,
+      sampai: effectiveSampai,
+      isLatest: !isCustomFilter,
       data: {
         summary: {
           totalPenjualan: Number(totalPenjualan),

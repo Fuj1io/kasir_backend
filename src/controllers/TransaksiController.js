@@ -1,6 +1,7 @@
 import db from "../configs/connectDB.js";
 import { Produk, Transaksi, detailTransaksiModel, BarangKeluar, Laporan } from "../models/Index.js";
 import { getStatusStok } from "../models/produkModel.js";
+import { getOrCreateLaporanHarian } from "../models/laporanModel.js";
 
 export const createTransaksi = async (req, res) => {
     const { items } = req.body;
@@ -45,13 +46,11 @@ export const createTransaksi = async (req, res) => {
             status: "selesai"
         }, { transaction });
 
-        const laporan = await Laporan.create({
+        const laporan = await getOrCreateLaporanHarian({
             status: "keluar",
-            tanggal: new Date(),
-            keterangan: `Transaksi #${transaksi.id_transaksi}`,
-            id_transaksi: transaksi.id_transaksi,
-            id_user: req.userId || null,
-        }, { transaction });
+            id_user: req.userId,
+            transaction
+        });
 
         for (const detail of details) {
             await detailTransaksiModel.create({

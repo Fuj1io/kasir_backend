@@ -2,7 +2,7 @@ import db from "../configs/connectDB.js";
 import { Produk } from "../models/produkModel.js";
 import { Kategori } from "../models/kategoriModel.js";
 import { barangMasukModel } from "../models/barangMasukModel.js";
-import { Laporan } from "../models/laporanModel.js";
+import { Laporan, getOrCreateLaporanHarian } from "../models/laporanModel.js";
 import { Op } from "sequelize";
 
 export const getAllProduk = async (req, res) => {
@@ -97,13 +97,11 @@ export const addProduk = async (req, res) => {
             id_kategori: kategori
         }, { transaction: t });
 
-        const laporan = await Laporan.create({
+        const laporan = await getOrCreateLaporanHarian({
             status: "masuk",
-            tanggal: new Date(),
-            keterangan: `Barang masuk: ${produk.nama_produk} x${qty}`,
-            id_produk: produk.id_produk,
-            id_user: req.userId || null,
-        }, { transaction: t });
+            id_user: req.userId,
+            transaction: t
+        });
 
         await barangMasukModel.create({
             id_produk: produk.id_produk,
