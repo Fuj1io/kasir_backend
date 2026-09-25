@@ -72,7 +72,7 @@ export const loginUser = async (req, res) => {
         const role = user.role;
 
         // generate-token             payload, secret, options
-        const accessToken = jwt.sign({userId, username, email, role}, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '1d'});
+        const accessToken = jwt.sign({userId, username, email, role}, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '9h'});
         const refreshToken = jwt.sign({ userId, username, email, role}, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '7d'});
 
         // update refresh_token + last_login in database

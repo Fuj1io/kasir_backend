@@ -7,16 +7,19 @@ export const authUser = (req, res, next) => {
     if(!token) return res.status(401).json({ message: "Access Denied !" });
 
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async(error, decoded) => {
-        if(error) return res.status(403).json({ message: "Invalid Token" });
+        if(error) return res.status(401).json({ message: "Invalid or Expired Token" });
 
-        const checkRefreshToken = await Users.findOne({where: { id_user : decoded.userId}});
-        if(!checkRefreshToken || !checkRefreshToken.refresh_token) return res.status(401).json({message: "Access dilarang !"});
+        try {
+            const checkRefreshToken = await Users.findOne({where: { id_user : decoded.userId}});
+            if(!checkRefreshToken || !checkRefreshToken.refresh_token) return res.status(401).json({message: "Access dilarang !"});
 
-        req.userId = decoded.userId;
-        req.email = decoded.email;
-        req.role = checkRefreshToken.role || decoded.role;
-        next();
-
+            req.userId = decoded.userId;
+            req.email = decoded.email;
+            req.role = checkRefreshToken.role || decoded.role;
+            next();
+        } catch (err) {
+            return res.status(500).json({ message: err.message });
+        }
     });
 }
 
