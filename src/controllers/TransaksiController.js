@@ -1,5 +1,5 @@
 import db from "../configs/connectDB.js";
-import { Produk, Transaksi, detailTransaksiModel, BarangKeluar, Laporan } from "../models/Index.js";
+import { Produk, Transaksi, detailTransaksiModel, BarangKeluar, Laporan } from "../models/index.js";
 import { getStatusStok } from "../models/produkModel.js";
 import { getOrCreateLaporanHarian } from "../models/laporanModel.js";
 

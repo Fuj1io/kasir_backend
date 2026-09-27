@@ -1,5 +1,5 @@
 import { Op } from "sequelize";
-import { Users, Produk, Transaksi, detailTransaksiModel, barangMasukModel, BarangKeluar, Laporan } from "../models/Index.js";
+import { Users, Produk, Transaksi, detailTransaksiModel, barangMasukModel, BarangKeluar, Laporan } from "../models/index.js";
 
 const parseDate = (str) => {
   if (!str) return null;
