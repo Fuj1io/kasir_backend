@@ -56,7 +56,7 @@ buka folder `seeds` dan import ke database
    - npm run dev
    - atau sesuaikan dengan package manager yang dipakai 
    ```
-7. ** untuk akses butuh akun **
+7. ** untuk akses aplikasi butuh akun **
 ````
 pada url tambahkan /register
 contoh : http://localhost:5173/register
