@@ -8,7 +8,6 @@ import userRoute from "./src/routes/userRoute.js";
 import produkRoute from "./src/routes/produkRoute.js";
 import transaksiRoute from "./src/routes/transaksiRoute.js";
 import laporanRoute from "./src/routes/laporanRoute.js";
-import "./src/models/Index.js";
 
 dotenv.config();
 const app = express();
