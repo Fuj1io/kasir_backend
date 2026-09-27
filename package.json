@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon app.js",
-    "start" : "node app.js"
+    "build" : "node app.js"
   },
   "author": "fuji",
   "license": "ISC",
