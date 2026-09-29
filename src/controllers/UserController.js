@@ -21,35 +21,59 @@ export const profileUser = async(req, res) => {
 export const registerUser = async (req, res) => {
   try {
     const { username, email, role, password, confPassword } = req.body;
+
+    if (!username || !email || !password || !confPassword) {
+        return res.status(400).json({ message: "Data tidak lengkap!" });
+    }
   
     if (password !== confPassword) {
         return res.status(400).json({
-            message: "Password ans Confirm Password do not Match !"
+            message: "Password dan Konfirmasi Password tidak cocok!"
         });
     }
 
-     // check if Email Already Exits
+     // check if Email Already Exists
     const exitingUser = await Users.findOne({ where : {email} });
     if(exitingUser){
         return res.status(400).json({
-            message: "Email Already Exits !"
+            message: "Email sudah terdaftar!"
         });
     }
 
-
-    const payload = {
-        username, email, role, password
+    const targetRole = role ? role.toLowerCase() : "kasir";
+    if (!["admin", "kasir"].includes(targetRole)) {
+        return res.status(400).json({ message: "Role tidak valid!" });
     }
 
-    const hashPassword = await bcrypt.hash(payload.password, 10);
-    payload.password = hashPassword;
+    // Role admin hanya boleh 1
+    if (targetRole === "admin") {
+        const adminCount = await Users.count({ where: { role: "admin" } });
+        if (adminCount >= 1) {
+            return res.status(400).json({
+                message: "Role admin sudah terdaftar! Role admin hanya boleh 1."
+            });
+        }
+    }
+
+    const hashPassword = await bcrypt.hash(password, 10);
+    const payload = {
+        username,
+        email,
+        role: targetRole,
+        password: hashPassword
+    };
 
     const user = await Users.create(payload);
 
    
     return res.status(201).json({
-        data: user,
-        message: "User  registerd SuccessFully !"
+        data: {
+            id_user: user.id_user,
+            username: user.username,
+            email: user.email,
+            role: user.role
+        },
+        message: "User berhasil didaftarkan!"
     });
   
   } catch (error) {

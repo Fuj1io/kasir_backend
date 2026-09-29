@@ -17,7 +17,8 @@ export const Users = db.define('Users', {
         allowNull: false
     },
     role: {
-        type: DataTypes.STRING(50),
+        type: DataTypes.ENUM('admin', 'kasir'),
+        defaultValue: 'kasir',
         allowNull: false,
     },
     password: {

@@ -39,6 +39,10 @@ export const createTransaksi = async (req, res) => {
             details.push({ produk, qty, harga_satuan: produk.harga, subtotal });
         }
 
+        if (total <= 0) {
+            throw new Error("Total bayar transaksi tidak valid");
+        }
+
         const transaksi = await Transaksi.create({
             id_user: req.userId,
             tanggal_transaksi: new Date(),
